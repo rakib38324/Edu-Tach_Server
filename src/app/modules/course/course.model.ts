@@ -9,44 +9,49 @@ const Tags = new Schema<Ttags>(
   { _id: false },
 );
 
-const courseSchema = new Schema<TCourse>({
-  title: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  instructor: {
-    type: String,
-    required: true,
-  },
-  categoryId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'Categorie',
-  },
-  price: { type: Number, required: true },
-  tags: {
-    type: [Tags],
-  },
-  startDate: { type: String, required: true },
-  endDate: { type: String, required: true },
-  language: { type: String, required: true },
-  provider: { type: String, required: true },
-  durationInWeeks: { type: Number },
-  details: {
-    level: {
+const courseSchema = new Schema<TCourse>(
+  {
+    title: {
       type: String,
-      enum: ['Beginner', 'Intermediate', 'Advanced'],
+      required: true,
+      unique: true,
+    },
+    instructor: {
+      type: String,
       required: true,
     },
-    description: { type: String, required: true },
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'Categorie',
+    },
+    price: { type: Number, required: true },
+    tags: {
+      type: [Tags],
+    },
+    startDate: { type: String, required: true },
+    endDate: { type: String, required: true },
+    language: { type: String, required: true },
+    provider: { type: String, required: true },
+    durationInWeeks: { type: Number },
+    details: {
+      level: {
+        type: String,
+        enum: ['Beginner', 'Intermediate', 'Advanced'],
+        required: true,
+      },
+      description: { type: String, required: true },
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
   },
-  createdBy: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User',
+  {
+    timestamps: true,
   },
-});
+);
 
 //=======================> creating a custom static method <======================
 courseSchema.statics.isCourseExists = async function (title: string) {

@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import catchAsync from '../../utility/catchAsync';
 import sendResponse from '../../utility/sendResponse';
-import { Course_Service } from './course.services';
+import { Course_Service } from './course.service';
 
 const createCourse = catchAsync(async (req, res) => {
   const categoryData = req.body;

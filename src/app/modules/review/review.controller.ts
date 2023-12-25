@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import catchAsync from '../../utility/catchAsync';
 import sendResponse from '../../utility/sendResponse';
-import { Review_Service } from './review.services';
+import { Review_Service } from './review.service';
 
 const createReview = catchAsync(async (req, res) => {
   const categoryData = req.body;

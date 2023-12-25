@@ -5,6 +5,7 @@ import { Category } from '../category/category.model';
 import { TCourse } from './course.interface';
 import { Course } from './course.model';
 import { User } from '../user/user.model';
+import UnauthrizedError from '../../errors/unauthorizedError';
 
 const calculateWeek = (startDate: string, endDate: string) => {
   const start = new Date(startDate).getTime();
@@ -23,7 +24,13 @@ const createCourseIntoDB = async (payload: TCourse) => {
   if (!isUserExists) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `CreatedBy, User ID: ${payload.categoryId} is not Valid ID! Please ensure the valid Category ID.`,
+      `CreatedBy, User ID: ${payload.createdBy} is not Valid ID! Please ensure the valid CreatedBy ID.`,
+    );
+  }
+  if (isUserExists.role !== 'admin') {
+    throw new UnauthrizedError(
+      httpStatus.UNAUTHORIZED,
+      'You do not have the necessary permissions to access this resource.',
     );
   }
 
@@ -209,6 +216,7 @@ const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
 
 const updateCourseIntoDB = async (_id: string, payload: Partial<TCourse>) => {
   const courseExists = await Course.findOne({ _id });
+
   if (courseExists) {
     const { tags, details, ...remainingCourseData } = payload;
 
@@ -316,7 +324,10 @@ const updateCourseIntoDB = async (_id: string, payload: Partial<TCourse>) => {
       }
 
       //====================== fetch update data =================
-      const result = await Course.findById({ _id });
+      const result = await Course.findById({ _id }).populate({
+        path: 'createdBy',
+        select: '_id username email role',
+      });
 
       return result;
     }

@@ -52,6 +52,11 @@ const globalErrorHandel: ErrorRequestHandler = (error, req, res, next) => {
     message = 'Unauthorized Access';
     errorMessage = error?.message;
     errorDetails = null;
+  } else if (error.name === 'JsonWebTokenError') {
+    message = 'Unauthorized Access';
+    errorMessage =
+      'You do not have the necessary permissions to access this resource.';
+    errorDetails = null;
   } else if (error instanceof Error) {
     message = error?.name;
     errorMessage = error?.message;
