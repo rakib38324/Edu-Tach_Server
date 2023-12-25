@@ -4,8 +4,8 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { User } from '../modules/user/user.model';
 import { TUserRole } from '../modules/user/user.interface';
 import catchAsync from '../utility/catchAsync';
-import AppError from '../errors/App.Error';
 import config from '../config/config';
+import UnauthrizedError from '../errors/unauthorizedError';
 
 const Auth = (...requiredRole: TUserRole[]) => {
   return catchAsync(
@@ -13,7 +13,10 @@ const Auth = (...requiredRole: TUserRole[]) => {
       const token = req.headers.authorization;
 
       if (!token) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized');
+        throw new UnauthrizedError(
+          httpStatus.UNAUTHORIZED,
+          'You do not have the necessary permissions to access this resource.',
+        );
       }
 
       // invalid token - synchronous
@@ -31,7 +34,10 @@ const Auth = (...requiredRole: TUserRole[]) => {
       const isUserExists = await User.isUserExistsByUserName(username);
 
       if (!isUserExists) {
-        throw new AppError(httpStatus.NOT_FOUND, 'This user not found!');
+        throw new UnauthrizedError(
+          httpStatus.UNAUTHORIZED,
+          'You do not have the necessary permissions to access this resource.',
+        );
       }
 
       if (
@@ -41,11 +47,17 @@ const Auth = (...requiredRole: TUserRole[]) => {
           iat as number,
         )
       ) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized');
+        throw new UnauthrizedError(
+          httpStatus.UNAUTHORIZED,
+          'You do not have the necessary permissions to access this resource.',
+        );
       }
 
       if (requiredRole && !requiredRole.includes(role)) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized');
+        throw new UnauthrizedError(
+          httpStatus.UNAUTHORIZED,
+          'You do not have the necessary permissions to access this resource.',
+        );
       }
 
       req.user = decoded;

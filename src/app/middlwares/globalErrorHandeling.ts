@@ -10,13 +10,14 @@ import handleValidationError from '../errors/handleValidationError';
 import handleDuplicateError from '../errors/handleDuplicateError';
 import AppError from '../errors/App.Error';
 import handleCastError from '../errors/handleCastError';
+import UnauthrizedError from '../errors/unauthorizedError';
 
 const globalErrorHandel: ErrorRequestHandler = (error, req, res, next) => {
   let statusCode = 500;
   let message = 'Errors!!!';
   let errorMessage = 'Something went wrong!';
 
-  let errorDetails = {};
+  let errorDetails = {} || null;
 
   if (error instanceof ZodError) {
     statusCode = 400;
@@ -47,6 +48,10 @@ const globalErrorHandel: ErrorRequestHandler = (error, req, res, next) => {
     message = 'Error';
     errorMessage = error?.message;
     errorDetails = error;
+  } else if (error instanceof UnauthrizedError) {
+    message = 'Unauthorized Access';
+    errorMessage = error?.message;
+    errorDetails = null;
   } else if (error instanceof Error) {
     message = error?.name;
     errorMessage = error?.message;
