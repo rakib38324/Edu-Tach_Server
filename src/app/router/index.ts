@@ -3,6 +3,7 @@ import { Category_router } from '../modules/category/category.router';
 import { Course_router } from '../modules/course/course.router';
 import { Review_router } from '../modules/review/review.router';
 import { UserRouters } from '../modules/user/user.router';
+import { AuthRouters } from '../modules/auth/auth.router';
 
 const router = Router();
 
@@ -22,6 +23,10 @@ const modelRouters = [
   {
     path: '/auth',
     route: UserRouters,
+  },
+  {
+    path: '/auth',
+    route: AuthRouters,
   },
 ];
 

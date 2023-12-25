@@ -29,7 +29,8 @@ const createUserIntoDB = async (payload: TUser) => {
 
   const totalData = {
     username: payload.username,
-    password: currentPassword,
+    password,
+    currentPassword: currentPassword,
     previousPassword_1: previousPassword_1,
     previousPassword_2: previousPassword_2,
     email: payload.email,
@@ -46,6 +47,7 @@ const createUserIntoDB = async (payload: TUser) => {
       {
         $project: {
           password: 0,
+          currentPassword: 0,
           previousPassword_1: 0,
           previousPassword_2: 0,
           __v: 0,
