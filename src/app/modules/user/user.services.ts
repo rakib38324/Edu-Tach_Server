@@ -19,11 +19,11 @@ const createUserIntoDB = async (payload: TUser) => {
     timestamp: new Date(),
   };
   const previousPassword_1 = {
-    password: '',
+    // previousPassword_1: '',
     timestamp: new Date(),
   };
   const previousPassword_2 = {
-    password: '',
+    // previousPassword_2: '',
     timestamp: new Date(),
   };
 

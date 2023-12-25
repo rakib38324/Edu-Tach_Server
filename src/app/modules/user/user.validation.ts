@@ -2,8 +2,6 @@
 import { z } from 'zod';
 
 const passwordMinLength = 8;
-const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])[A-Za-z\d!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}$/;
 
 const createUserValidationSchema = z.object({
   username: z
@@ -27,9 +25,6 @@ const createUserValidationSchema = z.object({
     })
     .refine((data) => /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(data), {
       message: 'Password must contain at least one special character.',
-    })
-    .refine((data) => passwordRegex.test(data), {
-      message: 'Password must meet all the specified criteria.',
     }),
   role: z.enum(['admin', 'user']).default('user'),
 });
@@ -53,11 +48,7 @@ const updateUserValidationSchema = z.object({
     })
     .refine((data) => /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(data), {
       message: 'Password must contain at least one special character.',
-    })
-    .refine((data) => passwordRegex.test(data), {
-      message: 'Password must meet all the specified criteria.',
-    })
-    .optional(),
+    }),
   role: z.enum(['admin', 'user']).default('user').optional(),
 });
 

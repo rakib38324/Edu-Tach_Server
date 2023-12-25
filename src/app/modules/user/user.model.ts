@@ -32,7 +32,7 @@ const previousPassword_1 = new Schema<TpreviousPassword_1>(
 
 const previousPassword_2 = new Schema<TpreviousPassword_2>(
   {
-    previousPassword_1: String,
+    previousPassword_2: String,
     timestamp: Date,
   },
   {
@@ -115,10 +115,10 @@ UserSchema.pre('save', async function (next) {
   //===========> Hash previousPassword_2 if it exists
   if (
     user.previousPassword_2 &&
-    typeof user.previousPassword_2.previousPassword_1 === 'string'
+    typeof user.previousPassword_2.previousPassword_2 === 'string'
   ) {
-    user.previousPassword_2.previousPassword_1 = await bcrypt.hash(
-      user.previousPassword_2.previousPassword_1,
+    user.previousPassword_2.previousPassword_2 = await bcrypt.hash(
+      user.previousPassword_2.previousPassword_2,
       Number(config.bcrypt_salt_round),
     );
   }

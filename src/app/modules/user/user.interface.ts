@@ -11,7 +11,7 @@ export type TpreviousPassword_1 = {
   timestamp?: Date;
 };
 export type TpreviousPassword_2 = {
-  previousPassword_1: string;
+  previousPassword_2: string;
   timestamp?: Date;
 };
 
