@@ -8,6 +8,11 @@ const Category_Schema = new Schema<TCategory>(
       required: [true, 'Category name is required.'],
       unique: true,
     },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   {
     timestamps: true,

@@ -18,6 +18,7 @@ export type TCourse = {
     level: 'Beginner' | 'Intermediate' | 'Advanced';
     description: string;
   };
+  createdBy: Types.ObjectId;
 };
 
 //-======================== for creating static ==========================

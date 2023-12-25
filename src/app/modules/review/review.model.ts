@@ -16,6 +16,11 @@ const Review_Schema = new Schema<TReview>(
       required: true,
       ref: 'Courses',
     },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,

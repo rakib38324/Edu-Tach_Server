@@ -14,16 +14,24 @@ const createUserIntoDB = async (payload: TUser) => {
     );
   }
 
-  const newPassword = [
-    {
-      password: password,
-      timestamp: new Date().toISOString(),
-    },
-  ];
+  const currentPassword = {
+    password: password,
+    timestamp: new Date(),
+  };
+  const previousPassword_1 = {
+    password: '',
+    timestamp: new Date(),
+  };
+  const previousPassword_2 = {
+    password: '',
+    timestamp: new Date(),
+  };
 
   const totalData = {
     username: payload.username,
-    password: newPassword,
+    password: currentPassword,
+    previousPassword_1: previousPassword_1,
+    previousPassword_2: previousPassword_2,
     email: payload.email,
     role: payload.role,
   };
@@ -38,6 +46,9 @@ const createUserIntoDB = async (payload: TUser) => {
       {
         $project: {
           password: 0,
+          previousPassword_1: 0,
+          previousPassword_2: 0,
+          __v: 0,
         },
       },
     ]);

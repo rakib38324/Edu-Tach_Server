@@ -19,21 +19,14 @@ const createCategoryIntoDB = async (payload: TCategory) => {
     const result = {
       _id: created._id,
       name: created.name,
+      createdBy: created.createdBy,
     };
     return result;
   }
 };
 
 const getAllCategoriesIntoDB = async () => {
-  const result = await Category.aggregate([
-    { $match: {} },
-    {
-      $project: {
-        _id: 1,
-        name: 1,
-      },
-    },
-  ]);
+  const result = await Category.find().populate('createdBy');
   return result;
 };
 

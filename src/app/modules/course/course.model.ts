@@ -41,6 +41,11 @@ const courseSchema = new Schema<TCourse>({
     },
     description: { type: String, required: true },
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
 });
 
 //=======================> creating a custom static method <======================

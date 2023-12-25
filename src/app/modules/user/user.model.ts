@@ -1,12 +1,37 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
-import { TPasswordChange, TUser } from './user.interface';
+import {
+  TPassword,
+  TUser,
+  TpreviousPassword_1,
+  TpreviousPassword_2,
+} from './user.interface';
 import config from '../../config/config';
 import bcrypt from 'bcrypt';
 
-const PasswordChange = new Schema<TPasswordChange>(
+const Password = new Schema<TPassword>(
   {
     password: String,
+    timestamp: Date,
+  },
+  {
+    _id: false,
+  },
+);
+
+const previousPassword_1 = new Schema<TpreviousPassword_1>(
+  {
+    previousPassword_1: String,
+    timestamp: Date,
+  },
+  {
+    _id: false,
+  },
+);
+
+const previousPassword_2 = new Schema<TpreviousPassword_2>(
+  {
+    previousPassword_1: String,
     timestamp: Date,
   },
   {
@@ -27,8 +52,14 @@ const UserSchema = new Schema<TUser>(
       required: true,
     },
     password: {
-      type: [PasswordChange],
+      type: Password,
       required: true,
+    },
+    previousPassword_1: {
+      type: previousPassword_1,
+    },
+    previousPassword_2: {
+      type: previousPassword_2,
     },
     role: {
       type: String,
@@ -41,25 +72,40 @@ const UserSchema = new Schema<TUser>(
   },
 );
 
-// Hash the password before saving the user
-UserSchema.pre<TUser>('save', async function (next) {
+UserSchema.pre('save', async function (next) {
   const user = this;
 
-  // Iterate over the password array and hash each password individually
-  user.password = await Promise.all(
-    user.password.map(async (passwordChange) => {
-      const hashedPassword = await bcrypt.hash(
-        passwordChange.password,
-        Number(config.bcrypt_salt_round),
-      );
+  //==========> Hash the current password if it exists
+  if (user.password && typeof user.password.password === 'string') {
+    user.password.password = await bcrypt.hash(
+      user.password.password,
+      Number(config.bcrypt_salt_round),
+    );
+  }
 
-      return {
-        password: hashedPassword,
-        timestamp: passwordChange.timestamp,
-      };
-    }),
-  );
+  //=========> Hash previousPassword_1 if it exists
+  if (
+    user.previousPassword_1 &&
+    typeof user.previousPassword_1.previousPassword_1 === 'string'
+  ) {
+    user.previousPassword_1.previousPassword_1 = await bcrypt.hash(
+      user.previousPassword_1.previousPassword_1,
+      Number(config.bcrypt_salt_round),
+    );
+  }
 
+  //===========> Hash previousPassword_2 if it exists
+  if (
+    user.previousPassword_2 &&
+    typeof user.previousPassword_2.previousPassword_1 === 'string'
+  ) {
+    user.previousPassword_2.previousPassword_1 = await bcrypt.hash(
+      user.previousPassword_2.previousPassword_1,
+      Number(config.bcrypt_salt_round),
+    );
+  }
+
+  // Move on to the next middleware or the save operation
   next();
 });
 
