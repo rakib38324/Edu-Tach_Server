@@ -4,6 +4,7 @@ import AppError from '../../errors/App.Error';
 import { Category } from '../category/category.model';
 import { TCourse } from './course.interface';
 import { Course } from './course.model';
+import { User } from '../user/user.model';
 
 const calculateWeek = (startDate: string, endDate: string) => {
   const start = new Date(startDate).getTime();
@@ -17,6 +18,14 @@ const calculateWeek = (startDate: string, endDate: string) => {
 const createCourseIntoDB = async (payload: TCourse) => {
   const courseExists = await Course.isCourseExists(payload.title);
   const categoryExists = await Category.findById({ _id: payload.categoryId });
+  const isUserExists = await User.findById(payload.createdBy);
+
+  if (!isUserExists) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `CreatedBy, User ID: ${payload.categoryId} is not Valid ID! Please ensure the valid Category ID.`,
+    );
+  }
 
   if (courseExists) {
     throw new AppError(
@@ -191,7 +200,9 @@ const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
     levelFilter['details.level'] = level;
   }
 
-  const levelQuery = await weekHourQuery.find(levelFilter);
+  const levelQuery = await weekHourQuery
+    .find(levelFilter)
+    .populate({ path: 'createdBy', select: '_id username email role' });
 
   return { levelQuery, page, limit };
 };

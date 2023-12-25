@@ -2,11 +2,13 @@ import express from 'express';
 import ValidateRequest from '../../middlwares/validateRequest';
 import { createReviewValidationSchema } from './review.validation';
 import { Review_Controller } from './review.controller';
+import Auth from '../../middlwares/auth';
 
 const router = express.Router();
 
 router.post(
   '/reviews',
+  Auth('user'),
   ValidateRequest(createReviewValidationSchema),
   Review_Controller.createReview,
 );

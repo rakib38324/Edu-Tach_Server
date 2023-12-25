@@ -22,7 +22,7 @@ const courseSchema = new Schema<TCourse>({
   categoryId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Categories',
+    ref: 'Categorie',
   },
   price: { type: Number, required: true },
   tags: {
