@@ -5,18 +5,24 @@ import { TCategory } from './category.interface';
 import { Category } from './category.model';
 import { User } from '../user/user.model';
 import UnauthrizedError from '../../errors/unauthorizedError';
+import { JwtPayload } from 'jsonwebtoken';
 
-const createCategoryIntoDB = async (payload: TCategory) => {
+const createCategoryIntoDB = async (
+  payload: TCategory,
+  userData: JwtPayload,
+) => {
   const existsCategory = await Category.findOne({
     name: { $regex: new RegExp(payload.name, 'i') },
   });
 
-  const isExistsCreatedPerson = await User.findById(payload.createdBy);
+  const { _id } = userData;
+
+  const isExistsCreatedPerson = await User.findById(_id);
 
   if (!isExistsCreatedPerson) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `CreatedBy, User ID: ${payload.createdBy} is not Valid ID! Please ensure the valid CreatedBy ID.`,
+      `CreatedBy, User ID: ${_id} is not Valid ID! Please ensure the valid CreatedBy ID.`,
     );
   }
 
@@ -32,15 +38,15 @@ const createCategoryIntoDB = async (payload: TCategory) => {
       httpStatus.BAD_REQUEST,
       'This Category Already Exists!!!',
     );
-  } else {
-    const created = await Category.create(payload);
-    const result = {
-      _id: created._id,
-      name: created.name,
-      createdBy: created.createdBy,
-    };
-    return result;
   }
+  const updateData = {
+    name: payload.name,
+    createdBy: _id,
+  };
+
+  const result = await Category.create(updateData);
+
+  return result;
 };
 
 const getAllCategoriesIntoDB = async () => {

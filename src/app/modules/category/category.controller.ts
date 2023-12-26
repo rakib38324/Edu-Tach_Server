@@ -4,7 +4,11 @@ import { Category_Service } from './category.service';
 import httpStatus from 'http-status';
 
 const createCategory = catchAsync(async (req, res) => {
-  const result = await Category_Service.createCategoryIntoDB(req.body);
+  const categoryData = req.body;
+  const result = await Category_Service.createCategoryIntoDB(
+    categoryData,
+    req.user,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,

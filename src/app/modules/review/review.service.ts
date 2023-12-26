@@ -5,15 +5,17 @@ import AppError from '../../errors/App.Error';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 import UnauthrizedError from '../../errors/unauthorizedError';
+import { JwtPayload } from 'jsonwebtoken';
 
-const createReviewIntoDB = async (payload: TReview) => {
+const createReviewIntoDB = async (payload: TReview, userData: JwtPayload) => {
   const courseExist = await Course.findById(payload.courseId);
-  const isExistsCreatedPerson = await User.findById(payload.createdBy);
+  const { _id } = userData;
+  const isExistsCreatedPerson = await User.findById(_id);
 
   if (!isExistsCreatedPerson) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `CreatedBy, User ID: ${payload.createdBy} is not Valid ID! Please ensure the valid CreatedBy ID.`,
+      `CreatedBy, User ID: ${_id} is not Valid ID! Please ensure the valid CreatedBy ID.`,
     );
   }
   if (isExistsCreatedPerson.role !== 'user') {
@@ -23,22 +25,32 @@ const createReviewIntoDB = async (payload: TReview) => {
     );
   }
 
-  if (courseExist) {
-    const result = (await Review.create(payload)).populate({
-      path: 'createdBy',
-      select: '_id username email role',
-    });
-    return result;
-  } else {
+  if (!courseExist) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       `Course Id: ${payload.courseId} is Invalid!!!`,
     );
   }
+
+  const updateData = {
+    rating: payload.rating,
+    review: payload.review,
+    courseId: payload.courseId,
+    createdBy: _id,
+  };
+
+  const result = (await Review.create(updateData)).populate({
+    path: 'createdBy',
+    select: '_id username email role',
+  });
+  return result;
 };
 
 const getCourseWithReviewIntoDB = async (courseId: string) => {
-  const course = await Course.findById(courseId);
+  const course = await Course.findById(courseId).populate({
+    path: 'createdBy',
+    select: '_id username email role',
+  });
   if (course) {
     const reviews = await Review.find({ courseId }).populate({
       path: 'createdBy',

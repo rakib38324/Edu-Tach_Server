@@ -217,6 +217,12 @@ const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
 const updateCourseIntoDB = async (_id: string, payload: Partial<TCourse>) => {
   const courseExists = await Course.findOne({ _id });
 
+  if (payload.createdBy) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Bad request for createdBy, Thats means Course Creator data not Editable!!!',
+    );
+  }
   if (courseExists) {
     const { tags, details, ...remainingCourseData } = payload;
 

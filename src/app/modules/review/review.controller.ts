@@ -5,7 +5,10 @@ import { Review_Service } from './review.service';
 
 const createReview = catchAsync(async (req, res) => {
   const categoryData = req.body;
-  const result = await Review_Service.createReviewIntoDB(categoryData);
+  const result = await Review_Service.createReviewIntoDB(
+    categoryData,
+    req.user,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
