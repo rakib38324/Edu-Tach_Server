@@ -95,6 +95,8 @@ details (Object):
 ## Please follow the API instructions for the local host
 ## link: http://localhost:5000/
 
+## Registration: POST /api/auth/register: USER REGISTRATION
+## login: POST /api/auth/login: LOGIN USER
 1. Endpoint: POST /api/course : __Create a Course
 2. Endpoint: GET /api/courses : __Get all Courses and also you have access to filter the data
 3. Endpoint: POST /api/categories : __You Create Category
