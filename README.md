@@ -12,7 +12,7 @@ Welcome to a robust and meticulously crafted TypeScript-Express-Mongoose Course 
 3. Review
 ## Video Instruction
 ==> https://drive.google.com/file/d/13R6onPSG9DCzGzHBV2IzFenZ_is4cYHU/view
-## It is Live link_Vercel: https://edutech-gamma.vercel.app/
+## It is Live link_Vercel: https://edutechwithauth.vercel.app
 
 # 1. For Local host: 
 1. At first clone the code.
