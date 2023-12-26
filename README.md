@@ -10,8 +10,8 @@ Welcome to a robust and meticulously crafted TypeScript-Express-Mongoose Course 
 1. Category 
 2. Course
 3. Review
-## Video Instruction
-==> https://drive.google.com/file/d/13R6onPSG9DCzGzHBV2IzFenZ_is4cYHU/view
+4. User
+
 ## It is Live link_Vercel: https://edutechwithauth.vercel.app
 
 # 1. For Local host: 
@@ -26,6 +26,7 @@ Welcome to a robust and meticulously crafted TypeScript-Express-Mongoose Course 
    
 ## Please follow the API instructions for the local host
 ## link: http://localhost:5000/
+
 1. Endpoint: POST /api/course : __Create a Course
 2. Endpoint: GET /api/courses : __Get all Courses and also you have access to filter the data
 3. Endpoint: POST /api/categories : __You Create Category
@@ -38,8 +39,72 @@ Welcome to a robust and meticulously crafted TypeScript-Express-Mongoose Course 
 # 2. Please follow the API instructions for the live link
 ## It is Live link_Vercel: https://edutech-gamma.vercel.app/
 
+# USER REGISTRATION:
 
-# 1. Create Category
+## Endpoint:
+```
+/api/auth/register
+```
+## Method: 
+```
+POST
+```
+## body
+```
+{
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "123456",
+    "role": "user"
+}
+```
+
+
+
+# USER LOGIN:
+
+## Endpoint:
+```
+/api/auth/login
+```
+## Method: 
+```
+POST
+```
+## body
+```
+{
+    "username": "john_doe",
+    "password": "123456"
+}
+```
+
+
+# CHANGE PASSWORD:
+
+## Endpoint:
+```
+/api/auth/change-password
+```
+## Method: 
+```
+POST
+```
+
+## HEADER:
+```
+Authorization: <JWT_TOKEN>
+```
+## body
+```
+{
+    "username": "john_doe",
+    "password": "123456"
+}
+```
+
+
+# 1. Create a Category (Only Admin can do this)
 ## Endpoint:
 ```
 /api/categories
@@ -47,6 +112,10 @@ Welcome to a robust and meticulously crafted TypeScript-Express-Mongoose Course 
 ## Method: 
 ```
 POST
+```
+## HEADER:
+```
+Authorization: <JWT_TOKEN>
 ```
 ## body
 ```
@@ -64,46 +133,45 @@ POST
 GET
 ```
 
-# 3. Create a Course
+# 3. Create a Course (Only Admin can do this)
 ## Endpoint:
 ```
-/api/course
+/api/courses
 ```
 ## Method: 
 ```
 POST
 ```
+## HEADER:
+```
+Authorization: <JWT_TOKEN>
+```
 ## Request Body:
 ```
 {
-    "title": "Sample Course",
-    "instructor": "Jane Doe",
-    "categoryId": "123456789012345678901234",
+    "title": "Introduction to Web Development",
+    "instructor": "John Smith",
+    "categoryId": "12345abcde67890fghij",
     "price": 49.99,
     "tags": [
-        {
-            "name": "Programming",
-            "isDeleted": false
-        },
-        {
-            "name": "Web Development",
-            "isDeleted": false
-        }
+        {"name": "Programming", "isDeleted": false},
+        {"name": "Web Development", "isDeleted": false}
     ],
-    "startDate": "2023-01-15",
-    "endDate":"2023-03-14",
+    "startDate": "2023-02-01",
+    "endDate": "2023-04-01",
     "language": "English",
     "provider": "Tech Academy",
+    "durationInWeeks": 8,
     "details": {
-        "level": "Intermediate",
-        "description": "Detailed description of the course"
+        "level": "Beginner",
+        "description": "A comprehensive introduction to web development."
     }
 }
 ```
 # 4. Find All Courses
 ## Endpoint:
 ```
-/api/course
+/api/courses
 ```
 ## Method: 
 ```
@@ -134,7 +202,47 @@ GET
 11. level: (Optional) Filters results by the difficulty level of the course. Example: ?level=Intermediate
 ```
 
-# 5. Create Review
+# 5. Update a Course (Only Admin can do this)
+## Endpoint:
+```
+/api/courses/:courseId
+```
+## Method: 
+```
+PUT
+```
+## HEADER:
+```
+Authorization: <JWT_TOKEN>
+```
+## body
+```
+
+   {
+    "price": 59.99,
+    "tags": [
+        {"name": "Programming", "isDeleted": false},
+        {"name": "Web Development", "isDeleted": false},
+        {"name": "JavaScript", "isDeleted": false}
+    ],
+    "details": {
+        "level": "Intermediate",
+        "description": "A comprehensive course on web development with a focus on JavaScript."
+    }
+}
+
+```
+
+# 6. Get the Best Course Based on Average Review (Rating)
+## Endpoint:
+```
+/api/course/best
+```
+## Method: 
+```
+GET
+```
+# 7. Create a Review (Only the user can do this)
 ## Endpoint:
 ```
 /api/reviews
@@ -142,6 +250,10 @@ GET
 ## Method: 
 ```
 POST
+```
+## HEADER:
+```
+Authorization: <JWT_TOKEN>
 ```
 ## body
 ```
@@ -152,7 +264,7 @@ POST
 }
 ```
 
-# 6. Update Review
+# 8. Update Review
 ## Endpoint:
 ```
 /api/courses/:courseId
@@ -190,7 +302,7 @@ PUT
 }
 ```
 
-# 7. Get Course by ID with Reviews**
+# 9. Get Course by ID with Reviews**
 ## Endpoint:
 ```
 /api/courses/:courseId/reviews
@@ -200,7 +312,7 @@ PUT
 GET
 ```
 
-# 8. Get the Best Course Based on Average Review (Rating)
+# 10. Get the Best Course Based on Average Review (Rating)
 ## Endpoint:
 ```
 /api/course/best
@@ -209,6 +321,8 @@ GET
 ```
 GET
 ```
+
+
 
 ## Models:
 ## 1. Course Model:
