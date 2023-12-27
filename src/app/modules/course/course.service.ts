@@ -88,23 +88,6 @@ const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
 
   excludeFields.forEach((el) => delete queryObj[el]);
 
-  //<============================================> pagination <===========================================>
-  let page = 1;
-  let limit = 10;
-  let skip = 0;
-
-  if (query.limit) {
-    limit = Number(query.limit);
-  }
-
-  if (query.page) {
-    page = Number(query.page);
-    skip = (page - 1) * limit;
-  }
-
-  const paginateQuery = allData.skip(skip);
-  const limitQuery = paginateQuery.limit(limit);
-
   //===========================================> sorting and filtering <===========================================>
   const sortBy =
     query.sortBy === 'duration'
@@ -114,7 +97,7 @@ const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
 
   const sort: any = { [sortBy as any]: sortOrder };
 
-  const filterQuery = limitQuery.find(queryObj).sort(sort);
+  const filterQuery = allData.find(queryObj).sort(sort);
 
   //==================================================> min max query <===============================================
   const minPrice = query.minPrice
@@ -207,11 +190,31 @@ const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
     levelFilter['details.level'] = level;
   }
 
-  const levelQuery = await weekHourQuery
+  const levelQuery = weekHourQuery
     .find(levelFilter)
     .populate({ path: 'createdBy', select: '_id username email role' });
 
-  return { levelQuery, page, limit };
+  //<============================================> pagination <===========================================>
+  let page = 1;
+  let limit = 10;
+  let skip = 0;
+
+  if (query.limit) {
+    limit = Number(query.limit);
+  }
+
+  if (query.page) {
+    page = Number(query.page);
+    skip = (page - 1) * limit;
+  }
+
+  // Create a separate query to get the total count
+  const totalQuery = await levelQuery.clone().countDocuments();
+
+  const paginateQuery = levelQuery.skip(skip);
+  const limitQuery = await paginateQuery.limit(limit);
+
+  return { limitQuery, page, limit, totalQuery };
 };
 
 const updateCourseIntoDB = async (_id: string, payload: Partial<TCourse>) => {

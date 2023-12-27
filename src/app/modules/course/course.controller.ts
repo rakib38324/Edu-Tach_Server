@@ -51,9 +51,9 @@ const getAllCourses = catchAsync(async (req, res) => {
     meta: {
       page: result.page,
       limit: result.limit,
-      total: result.levelQuery.length,
+      total: result.totalQuery,
     },
-    data: result.levelQuery,
+    data: result.limitQuery,
   });
 });
 
