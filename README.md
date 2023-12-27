@@ -73,7 +73,7 @@ details (Object):
     JWT_ACCESS_EXPIRES_IN = 1d
     JWT_ACCESS_SECRET = 9a8de97@#$%^&&*e26fdcfb38f33881
    ```
-7. Run the project with development environment
+7. Run the project with the development environment
    ```
    npm run start:dev
    ```
@@ -108,7 +108,7 @@ details (Object):
 8. Endpoint: GET /api/course/best:__Find the best Course from the best rating
 
 # 2. Please follow the API instructions for the live link
-## It is Live link_Vercel: https://edutech-gamma.vercel.app/
+## It is Live link_Vercel: https://edutechwithauth.vercel.app
 
 # USER REGISTRATION:
 
