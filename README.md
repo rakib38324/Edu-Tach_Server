@@ -13,6 +13,7 @@ Welcome to a robust and meticulously crafted TypeScript-Express-Mongoose Course 
 4. User
 
 ## It is Live link_Vercel: https://edutechwithauth.vercel.app
+## API DOCUMENTATION: https://documenter.getpostman.com/view/31202574/2s9YkuXcpQ
 
 ## Models Details:
 
