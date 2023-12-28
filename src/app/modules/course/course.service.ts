@@ -6,6 +6,7 @@ import { TCourse } from './course.interface';
 import { Course } from './course.model';
 import { User } from '../user/user.model';
 import UnauthrizedError from '../../errors/unauthorizedError';
+import { JwtPayload } from 'jsonwebtoken';
 
 const calculateWeek = (startDate: string, endDate: string) => {
   const start = new Date(startDate).getTime();
@@ -16,15 +17,15 @@ const calculateWeek = (startDate: string, endDate: string) => {
   return Weeks;
 };
 
-const createCourseIntoDB = async (payload: TCourse) => {
+const createCourseIntoDB = async (payload: TCourse, userData: JwtPayload) => {
   const courseExists = await Course.isCourseExists(payload.title);
   const categoryExists = await Category.findById({ _id: payload.categoryId });
-  const isUserExists = await User.findById(payload.createdBy);
+  const isUserExists = await User.findById(userData._id);
 
   if (!isUserExists) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `CreatedBy, User ID: ${payload.createdBy} is not Valid ID! Please ensure the valid CreatedBy ID.`,
+      `CreatedBy, User ID: ${userData._id} is not Valid ID! Please ensure the valid CreatedBy ID.`,
     );
   }
   if (isUserExists.role !== 'admin') {
@@ -47,7 +48,11 @@ const createCourseIntoDB = async (payload: TCourse) => {
         payload?.startDate,
         payload?.endDate,
       );
-      const updatedData = { ...payload, durationInWeeks };
+      const updatedData = {
+        ...payload,
+        durationInWeeks,
+        createdBy: userData._id,
+      };
       const created = await Course.create(updatedData);
 
       return created;
@@ -194,6 +199,9 @@ const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
     .find(levelFilter)
     .populate({ path: 'createdBy', select: '_id username email role' });
 
+  // Create a separate query to get the total Data
+  const totalData = await levelQuery.clone().countDocuments();
+
   //<============================================> pagination <===========================================>
   let page = 1;
   let limit = 10;
@@ -208,13 +216,10 @@ const getAllCoursesIntoDB = async (query: Record<string, unknown>) => {
     skip = (page - 1) * limit;
   }
 
-  // Create a separate query to get the total count
-  const totalQuery = await levelQuery.clone().countDocuments();
-
   const paginateQuery = levelQuery.skip(skip);
   const limitQuery = await paginateQuery.limit(limit);
 
-  return { limitQuery, page, limit, totalQuery };
+  return { limitQuery, page, limit, totalData };
 };
 
 const updateCourseIntoDB = async (_id: string, payload: Partial<TCourse>) => {
