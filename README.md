@@ -58,7 +58,7 @@ details (Object):
 # 1. For Local host: 
 1. At first clone the code.
    ```
-   git clone github..........
+   git clone https://github.com/rakib38324/Edu-Tach_Server.git
    ```
 3. Go to the terminal and:
    ```
