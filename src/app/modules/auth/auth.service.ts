@@ -73,6 +73,7 @@ const changePassword = async (
   const previous_1 = isUserExists?.previousPassword_1?.previousPassword_1;
   const previous_2 = isUserExists?.previousPassword_2?.previousPassword_2;
   const current_password = isUserExists?.currentPassword?.password;
+  
   const currentPasswordDate = isUserExists?.currentPassword?.timestamp;
 
   if (currentPasswordDate) {
