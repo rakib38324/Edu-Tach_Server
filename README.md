@@ -1,4 +1,4 @@
-# Welcome to Course Management-- Assignment
+# Welcome to Course Management Assignment
 
 Welcome to a robust and meticulously crafted TypeScript-Express-Mongoose Course Project! This comprehensive backend system is designed to manage an online course platform, leveraging the power of TypeScript for strong typing, Express.js for seamless routing, and Mongoose as the Object Data Modeling (ODM) library for MongoDB.
 # Technology Stack:
